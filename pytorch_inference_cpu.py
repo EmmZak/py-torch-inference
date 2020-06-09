@@ -15,14 +15,7 @@ import numpy as np
 from threading import Thread
 from PIL import Image
 
-gpu = torch.cuda.is_available()
-device = torch.device("cuda:0")
-print(device)
-print(gpu)
-
 model_name = "general"
-dataset_path = model_name + "/"
-
 
 classes = ["bottleopaque", "bottletrans", "box", "boxopaque", "boxtrans", "canette", "chips", "conserve", "filme", "hand", "nothing", "petecrase", "pp"]
 #classes = ["cap", "nocap", "nothing"]
@@ -47,8 +40,6 @@ model.classifier = torch.nn.Sequential(
 model.load_state_dict(torch.load(
     "mobilenet_models/best_weights_" + model_name + ".pth"))
 
-model = model.to(device)
-
 model.eval()
 
 cam = cv2.VideoCapture(0)
@@ -62,8 +53,6 @@ while True:
     cv2.waitKey(1)
 
     im = transform(im).unsqueeze(0)
-
-    im = im.to(device)
 
     output = model(im)
 
